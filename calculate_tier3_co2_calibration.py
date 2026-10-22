@@ -96,14 +96,14 @@ def summarize(frame, coefficients):
     simulated_total = (usable["tier3_co2_g_km"] * usable["distance_m"]).sum() / total_distance
     calibration = measured_total / simulated_total
     result["全局校准系数"] = calibration
-    result["校准模拟值（g/km）"] = result["Tier 3模拟值（g/km）"] * calibration
+    result["COPERT模拟值（g/km）"] = result["Tier 3模拟值（g/km）"] * calibration
     result["未校准误差率（%）"] = (result["实测值（g/km）"] - result["Tier 3模拟值（g/km）"]).abs() / result["实测值（g/km）"] * 100
-    result["校准误差率（%）"] = (result["实测值（g/km）"] - result["校准模拟值（g/km）"]).abs() / result["实测值（g/km）"] * 100
+    result["COPERT误差率（%）"] = (result["实测值（g/km）"] - result["COPERT模拟值（g/km）"]).abs() / result["实测值（g/km）"] * 100
     total = {"道路类型": "总体", "样本数": len(usable), "里程（km）": total_distance / 1000,
              "实测值（g/km）": measured_total, "Tier 3模拟值（g/km）": simulated_total,
-             "全局校准系数": calibration, "校准模拟值（g/km）": measured_total,
+             "全局校准系数": calibration, "COPERT模拟值（g/km）": measured_total,
              "未校准误差率（%）": abs(measured_total - simulated_total) / measured_total * 100,
-             "校准误差率（%）": 0.0}
+             "COPERT误差率（%）": 0.0}
     return usable, pd.concat([pd.DataFrame([total]), result], ignore_index=True), calibration
 
 
@@ -140,19 +140,17 @@ def draw_comparison(summary):
     fig, axes = plt.subplots(1, 2, figsize=(14, 6.2), constrained_layout=True)
     positions = np.arange(len(rows))
     width = 0.25
-    axes[0].bar(positions - width, rows["实测值（g/km）"], width, label="PEMS实测值", color="#4E79A7")
-    axes[0].bar(positions, rows["Tier 3模拟值（g/km）"], width, label="Tier 3模拟值", color="#F28E2B")
-    axes[0].bar(positions + width, rows["校准模拟值（g/km）"], width, label="校准模拟值", color="#CC5A6A")
+    axes[0].bar(positions - width / 2, rows["实测值（g/km）"], width, label="PEMS实测值", color="#4E79A7")
+    axes[0].bar(positions + width / 2, rows["COPERT模拟值（g/km）"], width, label="COPERT模拟值", color="#CC5A6A")
     axes[0].set_xticks(positions, rows["道路类型"])
     axes[0].set_ylabel("CO2排放因子（g/km）")
     axes[0].set_title("四种道路类型的实测值与模拟值")
     axes[0].grid(axis="y", color="#DCEAF6", linewidth=0.8)
     axes[0].legend()
-    axes[1].bar(positions - width / 2, rows["未校准误差率（%）"], width, label="未校准误差率", color="#F28E2B")
-    axes[1].bar(positions + width / 2, rows["校准误差率（%）"], width, label="校准误差率", color="#CC5A6A")
+    axes[1].bar(positions, rows["COPERT误差率（%）"], width, label="COPERT模拟误差率", color="#CC5A6A")
     axes[1].set_xticks(positions, rows["道路类型"])
     axes[1].set_ylabel("误差率（%）")
-    axes[1].set_title("模拟值与实测值的误差率")
+    axes[1].set_title("COPERT模拟值与实测值的误差率")
     axes[1].grid(axis="y", color="#DCEAF6", linewidth=0.8)
     axes[1].legend()
     fig.suptitle("Tier 3 CO2排放因子与PEMS实测值对比", fontsize=17, weight="bold")
