@@ -19,9 +19,9 @@ for ax,name in zip(axes.flat,models):
  ax.set_xlabel('实测碳排放强度（克·秒$^{-1}$）',fontsize=17,labelpad=8); ax.set_ylabel('预测碳排放强度（克·秒$^{-1}$）',fontsize=17,labelpad=8)
  ax.tick_params(labelsize=15); ax.grid(alpha=.25); ax.set_xlim(lo,hi); ax.set_ylim(lo,hi)
  # Put subplot name beneath the axes, as requested.
- ax.set_title(name,fontsize=23,pad=18,y=-.23)
+ ax.set_title(name,fontsize=23,pad=18,y=-.34)
 fig.suptitle('四种机器学习模型碳排放预测效果对比',fontsize=27,y=.985)
-fig.subplots_adjust(left=.09,right=.98,bottom=.12,top=.93,wspace=.28,hspace=.45)
+fig.subplots_adjust(left=.09,right=.98,bottom=.12,top=.93,wspace=.28,hspace=.70)
 fig.savefig(ROOT/'pems_fair_four_ml_scatter_large.png',bbox_inches='tight'); fig.savefig(ROOT/'pems_fair_four_ml_scatter_large.pdf',bbox_inches='tight'); plt.close(fig)
 # Chinese metrics table
 m[m['模型'].isin(models)].set_index('模型').loc[models].to_csv(ROOT/'pems_fair_four_ml_metrics_chinese.csv',encoding='utf-8-sig')
