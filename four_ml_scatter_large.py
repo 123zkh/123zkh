@@ -16,7 +16,7 @@ for ax,name in zip(axes.flat,models):
  ax.scatter(y,z,s=25,alpha=.42,color=colors[name],edgecolors='none'); ax.plot([lo,hi],[lo,hi],ls='--',lw=2,color='#555555')
  row=m[m['模型']==name].iloc[0]
  ax.text(.045,.95,f'$R^2$ = {row["R²"]:.4f}\nRMSE = {row["RMSE"]:.4f}',transform=ax.transAxes,va='top',fontsize=17,bbox=dict(facecolor='white',edgecolor='#888',alpha=.9,pad=7))
- ax.set_xlabel('实测碳排放强度（克·秒$^{-1}$）',fontsize=17,labelpad=8); ax.set_ylabel('预测碳排放强度（克·秒$^{-1}$）',fontsize=17,labelpad=8)
+ ax.set_xlabel('实测碳排放强度（g·s$^{-1}$）',fontsize=17,labelpad=8); ax.set_ylabel('预测碳排放强度（g·s$^{-1}$）',fontsize=17,labelpad=8)
  ax.tick_params(labelsize=15); ax.grid(alpha=.25); ax.set_xlim(lo,hi); ax.set_ylim(lo,hi)
  # Put subplot name beneath the axes, as requested.
  ax.set_title(name,fontsize=23,pad=18,y=-.34)
