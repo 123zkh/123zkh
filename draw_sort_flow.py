@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from matplotlib import font_manager
 ROOT=Path(__file__).resolve().parent
-fp='/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc'; font_manager.fontManager.addfont(fp)
+fp='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'; font_manager.fontManager.addfont(fp)
 plt.rcParams['font.family']=font_manager.FontProperties(fname=fp).get_name(); plt.rcParams['axes.unicode_minus']=False
 fig,ax=plt.subplots(figsize=(13,8),dpi=220); ax.set_xlim(0,13); ax.set_ylim(0,10); ax.axis('off')
 def box(x,y,w,h,text,fs=16):
