@@ -27,7 +27,4 @@ arrow(5.2,3.2,3.05,2.25); arrow(7.8,3.2,9.95,2.25)
 # merge lower
 box(4.0,.15,5.0,.7,'结果保存：目标位置、数量与轨迹')
 arrow(3.05,1.55,5.2,.85); arrow(9.95,1.55,7.8,.85)
-# branch details
-ax.text(1.15,1.1,'连通域面积、形状及位置判断',ha='left',va='top',fontsize=13)
-ax.text(8.05,1.1,'保留满足阈值的车辆运动目标',ha='left',va='top',fontsize=13)
 fig.savefig(ROOT/'vehicle_motion_detection_text_flow.png',bbox_inches='tight',facecolor='white'); fig.savefig(ROOT/'vehicle_motion_detection_text_flow.pdf',bbox_inches='tight',facecolor='white'); plt.close(fig)
