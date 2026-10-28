@@ -12,11 +12,6 @@ def arrow(points):
  xs,ys=zip(*points); ax.plot(xs,ys,color='black',lw=1.6); x1,y1=points[-2]; x2,y2=points[-1]; ax.annotate('',xy=(x2,y2),xytext=(x1,y1),arrowprops=dict(arrowstyle='->',lw=1.6,color='black'))
 box(4.6,9.0,3.8,.65,'连续视频帧输入'); box(4.6,7.55,3.8,.65,'读取相邻帧：I(t-1)、I(t)'); box(4.6,6.1,3.8,.65,'灰度化与去噪处理'); box(4.6,4.65,3.8,.65,'计算帧间绝对差值'); box(4.6,3.2,3.8,.65,'阈值分割得到前景');
 for y in [9,7.55,6.1,4.65]: arrow([(6.5,y),(6.5,y-.8)])
-# equation side box
-box(.6,5.8,3.2,1.3,'D(t,x,y)=|I(t,x,y)-I(t-1,x,y)|',13)
-arrow([(4.6,4.95),(4.0,4.95),(4.0,6.45),(3.8,6.45)])
-box(.6,3.2,3.2,1.3,'B(t,x,y)=1，D(t,x,y)≥T\nB(t,x,y)=0，D(t,x,y)<T',13)
-arrow([(4.6,3.5),(4.0,3.5),(4.0,3.85),(3.8,3.85)])
 # branch and merge
 box(1.2,1.55,3.7,.7,'形态学处理：开运算、闭运算')
 box(8.1,1.55,3.7,.7,'连通域分析与目标筛选')
