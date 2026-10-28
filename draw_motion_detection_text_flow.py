@@ -24,8 +24,8 @@ arrow([(6.5,9),(6.5,8.2)]); arrow([(6.5,7.55),(6.5,6.75)]); arrow([(6.5,6.1),(6.
 # branch after connected components
 box(1.15,1.55,3.8,.7,'去除噪声与小区域')
 box(8.05,1.55,3.8,.7,'筛选有效运动目标')
-arrow([(5.2,3.2),(5.2,2.55),(3.05,2.55),(3.05,2.25)]); arrow([(7.8,3.2),(7.8,2.55),(9.95,2.55),(9.95,2.25)])
+arrow([(6.5,3.2),(6.5,2.55),(3.05,2.55),(3.05,2.25)]); arrow([(6.5,2.55),(9.95,2.55),(9.95,2.25)])
 # merge lower
 box(4.0,.15,5.0,.7,'结果保存：目标位置、数量与轨迹')
-arrow([(3.05,1.55),(3.05,1.0),(5.2,1.0),(5.2,.85)]); arrow([(9.95,1.55),(9.95,1.0),(7.8,1.0),(7.8,.85)])
+ax.plot([3.05,3.05,6.5],[1.55,1.0,1.0],color='black',lw=1.6); ax.plot([9.95,9.95,6.5],[1.55,1.0,1.0],color='black',lw=1.6); arrow([(6.5,1.0),(6.5,.85)])
 fig.savefig(ROOT/'vehicle_motion_detection_text_flow.png',bbox_inches='tight',facecolor='white'); fig.savefig(ROOT/'vehicle_motion_detection_text_flow.pdf',bbox_inches='tight',facecolor='white'); plt.close(fig)
