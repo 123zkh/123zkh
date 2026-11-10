@@ -36,7 +36,7 @@ def detail_label(state):
     if state=='VSP 0–3':return '其他低负荷状态'
     part=state.split('｜')
     if len(part)==3:
-        return part[1].replace('（','\n（')+'\n'+part[2].replace('（','\n（')
+        return part[1]+'\n'+part[2].split('（')[0]
     return ''
 font='/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc'
 if Path(font).exists(): plt.rcParams['font.family']=font_manager.FontProperties(fname=font).get_name()
@@ -58,7 +58,7 @@ for state,i in positions.items():
     ax.scatter(i-.12,np.mean(y),s=52,color='white',edgecolors=color,linewidths=1.2,zorder=5)
     # Labels are printed above the detailed VSP 0-3 boxes; no n is printed.
     if state.startswith('VSP 0–3'):
-        ax.text(i,6.43,detail_label(state),ha='center',va='top',fontsize=26.4,color='#4A4A4A',linespacing=1.06)
+        ax.text(i,6.43,detail_label(state),ha='center',va='top',fontsize=52.8,color='#4A4A4A',linespacing=1.06)
 # Dashed separators at every VSP-bin boundary.
 groups=[['VSP 负负荷（<0）'],low,[x for x in base_order[1:] if x in available]]
 # The six unsegmented VSP bins each form an individual section.
