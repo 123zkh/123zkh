@@ -59,7 +59,7 @@ for state,i in positions.items():
     # Labels are printed above the detailed VSP 0-3 boxes; no n is printed.
     if state.startswith('VSP 0–3'):
         # Detailed conditions are arranged in a single row above the VSP 0–3 group.
-        ax.text(i, 6.86, detail_label(state), ha='center', va='top', fontsize=26.4, color='#4A4A4A', linespacing=1.06)
+        ax.text(i, 6.86, detail_label(state), ha='center', va='top', fontsize=26.4, fontweight='bold', color='#4A4A4A', linespacing=1.06)
 # Dashed separators at every VSP-bin boundary.
 groups=[['VSP 负负荷（<0）'],low,[x for x in base_order[1:] if x in available]]
 # The six unsegmented VSP bins each form an individual section.
