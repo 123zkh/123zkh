@@ -19,7 +19,7 @@ low_states=[
  'VSP 0–3｜起步/加速｜平坡（−1°至1°）','VSP 0–3｜起步/加速｜下坡（<-1°）','VSP 0–3',
 ]
 base_order=['VSP 负负荷（<0）','VSP 3–6','VSP 6–9','VSP 9–12','VSP 12–18','VSP ≥18']
-base_labels={'VSP 负负荷（<0）':'VSP<0','VSP 3–6':'VSP 3–6','VSP 6–9':'VSP 6–9','VSP 9–12':'VSP 9–12','VSP 12–18':'VSP 12–18','VSP ≥18':'VSP≥18'}
+base_labels={'VSP 负负荷（<0）':'[−∞, 0)','VSP 3–6':'[3, 6)','VSP 6–9':'[6, 9)','VSP 9–12':'[9, 12)','VSP 12–18':'[12, 18)','VSP ≥18':'[18, +∞)'}
 base_colors={'VSP 负负荷（<0）':'#91A8B7','VSP 0–3':'#C88991','VSP 3–6':'#D5AD6D','VSP 6–9':'#9BB58B','VSP 9–12':'#7DA8C8','VSP 12–18':'#A993C7','VSP ≥18':'#B49E7A'}
 D['绘图工况']=D['最终工况']
 available=set(D['绘图工况'])
@@ -40,9 +40,9 @@ def detail_label(state):
     return ''
 font='/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc'
 if Path(font).exists(): plt.rcParams['font.family']=font_manager.FontProperties(fname=font).get_name()
-plt.rcParams.update({'axes.unicode_minus':False,'font.size':12})
+plt.rcParams.update({'axes.unicode_minus':False,'font.size':36})
 rng=np.random.default_rng(20261110)
-fig,ax=plt.subplots(figsize=(21,10),dpi=240)
+fig,ax=plt.subplots(figsize=(42,20),dpi=180)
 positions={state:i for i,state in enumerate(order,start=1)}
 for state,i in positions.items():
     y=D.loc[D['绘图工况']==state,'碳排放强度'].to_numpy(); color=base_colors[base_of(state)]
@@ -58,7 +58,7 @@ for state,i in positions.items():
     ax.scatter(i-.12,np.mean(y),s=52,color='white',edgecolors=color,linewidths=1.2,zorder=5)
     # Labels are printed above the detailed VSP 0-3 boxes; no n is printed.
     if state.startswith('VSP 0–3'):
-        ax.text(i,6.28,detail_label(state),ha='center',va='top',fontsize=8.8,color='#4A4A4A',linespacing=1.06)
+        ax.text(i,6.43,detail_label(state),ha='center',va='top',fontsize=26.4,color='#4A4A4A',linespacing=1.06)
 # Dashed separators at every VSP-bin boundary.
 groups=[['VSP 负负荷（<0）'],low,[x for x in base_order[1:] if x in available]]
 # The six unsegmented VSP bins each form an individual section.
@@ -70,15 +70,15 @@ for g in groups[:-1]:
 centers=[];xlabels=[]
 for g in groups:
     centers.append(np.mean([positions[x] for x in g]))
-    xlabels.append('VSP 0–3' if g==low else base_labels.get(g[0],g[0]))
-ax.set_xticks(centers,xlabels,fontsize=13)
-ax.tick_params(axis='x',pad=10)
-ax.set_xlim(.45,len(order)+.65);ax.set_ylim(0,6.55)
-ax.set_ylabel('瞬时 CO$_2$ 排放强度（g·s$^{-1}$）',fontsize=16)
-ax.set_xlabel('VSP 区间',fontsize=15,labelpad=13)
-ax.set_title('不同 VSP 工况下的 CO$_2$ 排放分布',fontsize=22,weight='bold',pad=18)
+    xlabels.append('[0, 3)' if g==low else base_labels.get(g[0],g[0]))
+ax.set_xticks(centers,xlabels,fontsize=39)
+ax.tick_params(axis='x',pad=22); ax.tick_params(axis='y',labelsize=39)
+ax.set_xlim(.45,len(order)+.65);ax.set_ylim(0,6.75)
+ax.set_ylabel('瞬时 CO$_2$ 排放强度（g·s$^{-1}$）',fontsize=48)
+ax.set_xlabel('VSP 区间（kW/t）',fontsize=45,labelpad=30)
+ax.set_title('不同 VSP 工况下的 CO$_2$ 排放分布',fontsize=66,weight='bold',pad=40)
 ax.grid(axis='y',color='#DCE6F1',linewidth=.9);ax.set_axisbelow(True)
 ax.spines['top'].set_visible(False);ax.spines['right'].set_visible(False)
-fig.subplots_adjust(top=.90,bottom=.16,left=.08,right=.985)
+fig.subplots_adjust(top=.88,bottom=.20,left=.105,right=.985)
 fig.savefig(OUT.with_suffix('.png'),bbox_inches='tight');fig.savefig(OUT.with_suffix('.pdf'),bbox_inches='tight')
 pd.DataFrame({'排列序号':range(1,len(order)+1),'VSP区间':[base_of(x) for x in order],'绘图工况':order,'中位排放强度（g/s）':[median.get(x,D.loc[D['绘图工况']==x,'碳排放强度'].median()) for x in order]}).to_csv(OUT.with_name(OUT.name+'_groups.csv'),index=False,encoding='utf-8-sig')
