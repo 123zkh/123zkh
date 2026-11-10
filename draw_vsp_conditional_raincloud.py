@@ -24,7 +24,7 @@ other_order=['VSP 负负荷（<0）','VSP 3–6','VSP 6–9','VSP 9–12','VSP 1
 # Fine leaves that did not satisfy n>=50 have already been returned to the
 # parent low-VSP class by the validated-factor selection script.
 D['绘图工况']=D['最终工况']
-order=[x for x in low_order+other_order if x in set(D['绘图工况'])]
+order=[x for x in ['VSP 负负荷（<0）']+low_order+['VSP 3–6','VSP 6–9','VSP 9–12','VSP 12–18','VSP ≥18'] if x in set(D['绘图工况'])]
 labels={
  'VSP 0–3｜怠速/停车｜下坡（<-1°）':'怠速/停车\n下坡', 'VSP 0–3｜怠速/停车｜平坡（−1°至1°）':'怠速/停车\n平坡','VSP 0–3｜怠速/停车｜上坡（>1°）':'怠速/停车\n上坡',
  'VSP 0–3｜匀速｜下坡（<-1°）':'匀速\n下坡','VSP 0–3｜匀速｜平坡（−1°至1°）':'匀速\n平坡','VSP 0–3｜制动/滑行｜平坡（−1°至1°）':'制动/滑行\n平坡',
@@ -51,21 +51,16 @@ for i,(state,color) in enumerate(zip(order,colors),start=1):
     jitter=i+.18+rng.normal(0,.045,len(sample))
     ax.scatter(jitter,sample,s=13,color=color,alpha=.48,edgecolors='none',zorder=3)
     ax.scatter(i-.12,np.mean(y),s=52,color='white',edgecolors=color,linewidths=1.2,zorder=5)
-# Sections / header bands
-low_n=sum(x in low_order for x in order); total=len(order)
-ax.axvline(low_n+.5,color='#AFC4D8',lw=1.7,ls=(0,(7,6)),zorder=0)
-for x0,w,text in [(0.45,low_n,'VSP 0–3 kW/t：细分运行工况'),(low_n+.5,total-low_n,'其余 VSP 区间：未细分工况')]:
-    ax.add_patch(Rectangle((x0,1.012),w,.105,transform=ax.get_xaxis_transform(),facecolor='#C7C7C7',edgecolor='white',clip_on=False,zorder=0))
-    ax.text(x0+w/2,1.064,text,ha='center',va='center',transform=ax.get_xaxis_transform(),fontsize=17,weight='bold')
+# Ordered strictly by VSP interval; no explanatory header or legend.
+total=len(order)
 ax.set_xlim(.45,total+.65);ax.set_ylim(0,6.2)
 ax.set_xticks(range(1,total+1),[labels[x] for x in order],fontsize=10.5)
 ax.set_ylabel('瞬时 CO$_2$ 排放强度（g·s$^{-1}$）',fontsize=16)
 ax.set_xlabel('运行工况',fontsize=15,labelpad=12)
-ax.set_title('VSP 条件修正工况下的 CO$_2$ 排放分布',fontsize=22,weight='bold',pad=55)
+ax.set_title('不同 VSP 工况下的 CO$_2$ 排放分布',fontsize=22,weight='bold',pad=18)
 ax.grid(axis='y',color='#DCE6F1',linewidth=.9);ax.set_axisbelow(True)
 ax.spines['top'].set_visible(False);ax.spines['right'].set_visible(False)
-ax.text(.99,.02,'小提琴图：排放分布密度\n箱体：第 1 至第 3 四分位数；白点：均值',transform=ax.transAxes,ha='right',va='bottom',fontsize=11,bbox={'facecolor':'white','edgecolor':'#AEB8C2','alpha':.94})
-fig.subplots_adjust(top=.82,bottom=.19,left=.08,right=.985)
+fig.subplots_adjust(top=.90,bottom=.19,left=.08,right=.985)
 fig.savefig(OUT.with_suffix('.png'),bbox_inches='tight');fig.savefig(OUT.with_suffix('.pdf'),bbox_inches='tight')
 # Explicit plotting specification for the thesis methods appendix.
 pd.DataFrame({'分区':['VSP 0–3 kW/t（细分）' if x in low_order else '其余VSP（未细分）' for x in order], '绘图工况':order,'横坐标标签':[labels[x].replace('\n',' ') for x in order], '样本数':[int((D['绘图工况']==x).sum()) for x in order]}).to_csv(OUT.with_name(OUT.name+'_groups.csv'),index=False,encoding='utf-8-sig')
