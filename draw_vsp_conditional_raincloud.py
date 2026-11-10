@@ -58,7 +58,9 @@ for state,i in positions.items():
     ax.scatter(i-.12,np.mean(y),s=52,color='white',edgecolors=color,linewidths=1.2,zorder=5)
     # Labels are printed above the detailed VSP 0-3 boxes; no n is printed.
     if state.startswith('VSP 0–3'):
-        ax.text(i,6.43,detail_label(state),ha='center',va='top',fontsize=52.8,color='#4A4A4A',linespacing=1.06)
+        # Three staggered rows keep the enlarged condition labels readable.
+        label_y = [8.30, 7.48, 6.66][(i - 2) % 3]
+        ax.text(i, label_y, detail_label(state), ha='center', va='top', fontsize=52.8, color='#4A4A4A', linespacing=1.06)
 # Dashed separators at every VSP-bin boundary.
 groups=[['VSP 负负荷（<0）'],low,[x for x in base_order[1:] if x in available]]
 # The six unsegmented VSP bins each form an individual section.
@@ -73,12 +75,12 @@ for g in groups:
     xlabels.append('[0, 3)' if g==low else base_labels.get(g[0],g[0]))
 ax.set_xticks(centers,xlabels,fontsize=39)
 ax.tick_params(axis='x',pad=22); ax.tick_params(axis='y',labelsize=39)
-ax.set_xlim(.45,len(order)+.65);ax.set_ylim(0,6.75)
+ax.set_xlim(.45,len(order)+.65);ax.set_ylim(0,8.70)
 ax.set_ylabel('瞬时 CO$_2$ 排放强度（g·s$^{-1}$）',fontsize=48)
 ax.set_xlabel('VSP 区间（kW/t）',fontsize=45,labelpad=30)
 ax.set_title('不同 VSP 工况下的 CO$_2$ 排放分布',fontsize=66,weight='bold',pad=40)
 ax.grid(axis='y',color='#DCE6F1',linewidth=.9);ax.set_axisbelow(True)
 ax.spines['top'].set_visible(False);ax.spines['right'].set_visible(False)
-fig.subplots_adjust(top=.88,bottom=.20,left=.105,right=.985)
+fig.subplots_adjust(top=.86,bottom=.20,left=.105,right=.985)
 fig.savefig(OUT.with_suffix('.png'),bbox_inches='tight');fig.savefig(OUT.with_suffix('.pdf'),bbox_inches='tight')
 pd.DataFrame({'排列序号':range(1,len(order)+1),'VSP区间':[base_of(x) for x in order],'绘图工况':order,'中位排放强度（g/s）':[median.get(x,D.loc[D['绘图工况']==x,'碳排放强度'].median()) for x in order]}).to_csv(OUT.with_name(OUT.name+'_groups.csv'),index=False,encoding='utf-8-sig')
