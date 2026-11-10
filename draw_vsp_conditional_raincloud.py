@@ -53,14 +53,25 @@ for i,(state,color) in enumerate(zip(order,colors),start=1):
     ax.scatter(i-.12,np.mean(y),s=52,color='white',edgecolors=color,linewidths=1.2,zorder=5)
 # Ordered strictly by VSP interval; no explanatory header or legend.
 total=len(order)
+# Separate the low-VSP detailed interval from its adjacent VSP bins and add
+# a bracketed parent label beneath its detailed x-axis categories.
+low_start=2
+low_end=1+len(low_order)
+ax.axvline(low_start-.5,color='#8EA9C1',lw=1.6,ls=(0,(6,5)),zorder=0)
+ax.axvline(low_end+.5,color='#8EA9C1',lw=1.6,ls=(0,(6,5)),zorder=0)
+y_bracket=-.105
+ax.plot([low_start-.38,low_end+.38],[y_bracket,y_bracket],transform=ax.get_xaxis_transform(),color='#4E6475',lw=1.4,clip_on=False)
+ax.plot([low_start-.38,low_start-.38],[y_bracket,y_bracket+.025],transform=ax.get_xaxis_transform(),color='#4E6475',lw=1.4,clip_on=False)
+ax.plot([low_end+.38,low_end+.38],[y_bracket,y_bracket+.025],transform=ax.get_xaxis_transform(),color='#4E6475',lw=1.4,clip_on=False)
+ax.text((low_start+low_end)/2,y_bracket-.035,'VSP 0–3',transform=ax.get_xaxis_transform(),ha='center',va='top',fontsize=14,weight='bold')
 ax.set_xlim(.45,total+.65);ax.set_ylim(0,6.2)
 ax.set_xticks(range(1,total+1),[labels[x] for x in order],fontsize=10.5)
 ax.set_ylabel('瞬时 CO$_2$ 排放强度（g·s$^{-1}$）',fontsize=16)
-ax.set_xlabel('运行工况',fontsize=15,labelpad=12)
+ax.set_xlabel('')
 ax.set_title('不同 VSP 工况下的 CO$_2$ 排放分布',fontsize=22,weight='bold',pad=18)
 ax.grid(axis='y',color='#DCE6F1',linewidth=.9);ax.set_axisbelow(True)
 ax.spines['top'].set_visible(False);ax.spines['right'].set_visible(False)
-fig.subplots_adjust(top=.90,bottom=.19,left=.08,right=.985)
+fig.subplots_adjust(top=.90,bottom=.26,left=.08,right=.985)
 fig.savefig(OUT.with_suffix('.png'),bbox_inches='tight');fig.savefig(OUT.with_suffix('.pdf'),bbox_inches='tight')
 # Explicit plotting specification for the thesis methods appendix.
 pd.DataFrame({'分区':['VSP 0–3 kW/t（细分）' if x in low_order else '其余VSP（未细分）' for x in order], '绘图工况':order,'横坐标标签':[labels[x].replace('\n',' ') for x in order], '样本数':[int((D['绘图工况']==x).sum()) for x in order]}).to_csv(OUT.with_name(OUT.name+'_groups.csv'),index=False,encoding='utf-8-sig')
